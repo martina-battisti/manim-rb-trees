@@ -1,0 +1,11 @@
+argparse
+colour
+numpy
+Pillow
+progressbar
+scipy
+tqdm
+opencv-python
+pydub
+pygments
+pyreadline; sys_platform == 'win32'
