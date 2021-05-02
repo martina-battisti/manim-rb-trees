@@ -41,21 +41,17 @@ class firstTreeScenes(Scene):
                 node.to_edge(UP)
                 node.pos = node.get_center() 
                 self.play(Create((node).move_to(node.pos)))
-                #self.play(Create((node).move_to(node.pos)), Create((node.txt).move_to(node.pos)))
             else:
                 self.play(Create((node).move_to(node.pos)), Create(node.lne))
-                #self.play(Create((node).move_to(node.pos)), Create((node.txt).move_to(node.pos)))
-                #self.bring_to_back(node.lne)
+                
             albero.returnTree(node) #for Nill nodes
             tmp = node    
             right = node.r
             left = node.l
             if left is not None:
-                #self.play(Create(left.move_to(left.pos)), Create((left.txt).move_to(left.pos)), Create(left.lne))
                 self.printNode(left, albero)
             node = tmp
             if right is not None:
-                #self.play(Create(right.move_to(right.pos)), Create((right.txt).move_to(right.pos)), Create(right.lne))
                 self.printNode(right, albero)
     
     #print nodes one shot
@@ -66,11 +62,8 @@ class firstTreeScenes(Scene):
                 node.to_edge(UP)
                 node.pos = node.get_center() 
                 self.add((node).move_to(node.pos))
-                #self.add((node).move_to(node.pos), (node.txt).move_to(node.pos))
             else:
                 self.add((node).move_to(node.pos), node.lne)
-                #self.add((node).move_to(node.pos), (node.txt).move_to(node.pos))
-                #self.bring_to_back(node.lne)
             albero.returnTree(node) #for Nill nodes
             tmp = node    
             right = node.r
@@ -83,7 +76,6 @@ class firstTreeScenes(Scene):
     
     #print tree and evidence value in the vector (to modify)
     def printNodeVect(self, tmp, i, node, albero):
-        #node, left, right, right_pos, left_pos = albero.returnTree(node)        
         if node == albero.getRoot() and i==0:
             self.play(Create(node))
             box[i] = Rectangle(height=1, width=1, color = YELLOW)
@@ -98,7 +90,6 @@ class firstTreeScenes(Scene):
         if i<10:
             if tmpl is not None:
                 if tmpl.v == tmp[i]:
-                    #self.play(Create((left).move_to(left_pos)), Create((left.txt).move_to(left_pos)), Create(left.lne))
                     self.play(Create((left).move_to(left_pos)))
                     box[i] = Rectangle(height=1, width=1, color = YELLOW)
                     box[i].move_to(3*DOWN+5*LEFT)
@@ -112,7 +103,6 @@ class firstTreeScenes(Scene):
             node = tmpn
             if right is not None:
                 if right.v == tmp[i]:
-                    #self.play(Create((right).move_to(right_pos)), Create((right.txt).move_to(right_pos)), Create(right.lne))
                     self.play(Create((right).move_to(right_pos)))
                     box[i] = Rectangle(height=1, width=1, color = YELLOW)
                     box[i].move_to(3*DOWN+5*LEFT)
@@ -123,7 +113,7 @@ class firstTreeScenes(Scene):
                 else:
                     self.printNodeVect(tmp, i, right, albero)
 
-    #scroll nodes (fronm leef to root) (to modify)
+    #scroll nodes (from leef to root) (to modify)
     def scrollNode(self, node, albero):
         if node is not None:
             albero.returnTree(node)        
@@ -134,7 +124,6 @@ class firstTreeScenes(Scene):
             tmpr = node.r
             tmpl = node.l
             if tmpl is not None:
-                #self.play(Create((left).move_to(left_pos)), Create((left.txt).move_to(left_pos)), Create(left.lne))
                 self.play(Create((left).move_to(left_pos)))
                 while node is not None:
                     self.play(GrowFromCenter(node))
@@ -142,7 +131,6 @@ class firstTreeScenes(Scene):
                 self.scrollNode(tmpl, albero)
             node = tmp
             if tmpr is not None:
-                #self.play(Create((right).move_to(right_pos)), Create((right.txt).move_to(right_pos)), Create(right.lne))
                 self.play(Create((right).move_to(right_pos)))
                 while node is not None:
                     self.play(GrowFromCenter(node))
@@ -200,7 +188,6 @@ class firstTreeScenes(Scene):
             if val == tmp.v:
                 #case 0: leaf
                 if tmp.l == None and tmp.r == None:
-                    #self.remove(tmp.lne, tmp.txt, tmp)
                     self.remove(tmp.lne)
                     tmp = None
                     print("0")
@@ -269,12 +256,8 @@ class firstTreeScenes(Scene):
                         subtreeGroup = Group(*subtree)
                         self.play(FadeOut(subtreeGroup))
                         tmp.v = tmp2.v
-                        #self.play(FadeOut(tmp.txt))
-                        #tmp.txt = Tex(str(tmp.v))
-                        #self.play(Create((tmp.txt).move_to(tmp.pos)))
                         # modify nodes dependencies
                         (tmp2.p).l = None
-                        #self.printNode(tmp, albero)
                         print("3.2")
 
             elif val < tmp.v:
@@ -283,7 +266,7 @@ class firstTreeScenes(Scene):
                 tmp.r = self.deleteNodeProva(val, tmp.r, albero)
             return tmp
     
-    # rotate left at node x (visualization)
+    # rotate left at node x 
     def left_rotate_visua(self, x, albero):
         print("left_rotate")
         y = x.r # y is x's right soon
@@ -302,7 +285,7 @@ class firstTreeScenes(Scene):
         x.p = y     # y is x parent
         self.printNode(parent, albero)
     
-    # rotate right at node x
+    # rotate right at node x 
     def right_rotate_visua(self, x, albero):
         print("right_rotate")
         y = x.l
@@ -448,7 +431,6 @@ class firstTreeScenes(Scene):
         self.wait(3)
         
         
-        
     # rotate right at node x
     def right_rotate_step(self, x, albero):
         self.clearScene()
@@ -575,11 +557,6 @@ class firstTreeScenes(Scene):
 
         self.wait(3)
 
-    def drawLine (self, start, end):
-        #if start is not None and end is not None:
-        line = Line(start.get_center(), end.get_center(), buff=RAD)
-        #else:
-            #line = None
 
     def insert(self, val, albero):
         # Ordinary Binary Search Insertion
@@ -850,6 +827,20 @@ class firstTreeScenes(Scene):
                 s = (x.p).r
                 if s.color == 1:
                     # case 3.1
+                    print("case 3.1")
+                    t1 = Tex('\\begin{flushleft}\\textbf{Case 3.1:}\\\\x ’s sibling S is red\\end{flushleft}')
+                    t1.scale(0.5).to_edge(UR)
+                    self.play(Create(t1))
+                    self.wait(duration=2.5)
+                    t2 = Tex('In this case, we switch the colors of S and x.parent\\\\and then perform the left rotation on x.parent.')
+                    t2.scale(0.5).to_edge(DOWN)
+                    self.play(Create(t2))
+                    self.wait(duration=3)
+                    t3 = Tex('This reduces case 3.1 to case 3.2, 3.3 or 3.4.')
+                    t3.scale(0.5).to_edge(DOWN)
+                    self.play(ReplacementTransform(t2, t3))
+                    self.wait(duration=3)
+                    self.play(FadeOut(t3))
                     s.color = 0
                     (x.p).color = 1
                     self.left_rotate_step(x.p, albero)
@@ -857,17 +848,59 @@ class firstTreeScenes(Scene):
 
                 if (s.l).color == 0 and (s.r).color == 0:
                     # case 3.2
+                    print("case 3.2")
+                    t1 = Tex('\\begin{flushleft}\\textbf{Case 3.2:}\\\\x’s sibling S is black,\\\\and both of S’s children are black.\\end{flushleft}')
+                    t1.scale(0.5).to_edge(UR)
+                    self.play(Create(t1))
+                    self.wait(duration=2.5)
+                    t2 = Tex('The color of x’s parent can be red or black.\\\\We switch the color of S to red.\\\\If the color of x’ parent is red, we change its color to black.')
+                    t2.scale(0.5).to_edge(DOWN)
+                    self.play(Create(t2))
+                    self.wait(duration=3)
+                    t3 = Tex('Otherwise, we make x’s parent a new x and repeat the process from case 3.1.')
+                    t3.scale(0.5).to_edge(DOWN)
+                    self.play(ReplacementTransform(t2, t3))
+                    self.wait(duration=3)
+                    self.play(FadeOut(t3))
                     s.color = 1
                     x = x.p
                 else:
                     if (s.r).color == 0:
                         # case 3.3
+                        print("case 3.3")
+                        t1 = Tex('\\begin{flushleft}\\textbf{Case 3.3:}\\\\x’s sibling S is black, S’s left child is red,\\\\and S’s right child is black.\\end{flushleft}')
+                        t1.scale(0.5).to_edge(UR)
+                        self.play(Create(t1))
+                        self.wait(duration=2.5)
+                        t2 = Tex('We can switch the colors of S and its left child and then perform\\\\a right rotation on w without violating any of the properties.')
+                        t2.scale(0.5).to_edge(DOWN)
+                        self.play(Create(t2))
+                        self.wait(duration=3)
+                        t3 = Tex('This transforms the tree into case 3.4.')
+                        t3.scale(0.5).to_edge(DOWN)
+                        self.play(ReplacementTransform(t2, t3))
+                        self.wait(duration=3)
+                        self.play(FadeOut(t3))
                         (s.l).color = 0
                         s.color = 1
                         self.right_rotate_step(s, albero)
                         s = (x.p).r
 
                     # case 3.4
+                    print("case 3.4")
+                    t1 = Tex('\\begin{flushleft}\\textbf{Case 3.4:}\\\\x ’s sibling S is black,\\\\and S’s right child is red.\\end{flushleft}')
+                    t1.scale(0.5).to_edge(UR)
+                    self.play(Create(t1))
+                    self.wait(duration=2.5)
+                    t2 = Tex('We change the color of S’s right child to black, x’s parent to black\\\\and perform the left rotation x’ parent node.')
+                    t2.scale(0.5).to_edge(DOWN)
+                    self.play(Create(t2))
+                    self.wait(duration=3)
+                    t3 = Tex('This way we remove the extra black node on x.')
+                    t3.scale(0.5).to_edge(DOWN)
+                    self.play(ReplacementTransform(t2, t3))
+                    self.wait(duration=3)
+                    self.play(FadeOut(t3))
                     s.color = (x.p).color
                     (x.p).color = 0
                     (s.r).color = 0
@@ -878,6 +911,20 @@ class firstTreeScenes(Scene):
                 s = (x.p).l
                 if s.color == 1:
                     # case 3.1
+                    print("case 3.1")
+                    t1 = Tex('\\begin{flushleft}\\textbf{Case 3.1:}\\\\x ’s sibling S is red.\\end{flushleft}')
+                    t1.scale(0.5).to_edge(UR)
+                    self.play(Create(t1))
+                    self.wait(duration=2.5)
+                    t2 = Tex('In this case, we switch the colors of S and x.parent\\\\and then perform the left rotation on x.parent.')
+                    t2.scale(0.5).to_edge(DOWN)
+                    self.play(Create(t2))
+                    self.wait(duration=3)
+                    t3 = Tex('This reduces case 3.1 to case 3.2, 3.3 or 3.4.')
+                    t3.scale(0.5).to_edge(DOWN)
+                    self.play(ReplacementTransform(t2, t3))
+                    self.wait(duration=3)
+                    self.play(FadeOut(t3))
                     s.color = 0
                     (x.p).color = 1
                     self.right_rotate_step(x.p, albero)
@@ -885,17 +932,59 @@ class firstTreeScenes(Scene):
 
                 if (s.l).color == 0 and (s.r).color == 0:
                     # case 3.2
+                    print("case 3.2")
+                    t1 = Tex('\\begin{flushleft}\\textbf{Case 3.2:}\\\\x’s sibling S is black,\\\\and both of S’s children are black.\\end{flushleft}')
+                    t1.scale(0.5).to_edge(UR)
+                    self.play(Create(t1))
+                    self.wait(duration=2.5)
+                    t2 = Tex('The color of x’s parent can be red or black.\\\\We switch the color of S to red.\\\\If the color of x’ parent is red, we change its color to black.')
+                    t2.scale(0.5).to_edge(DOWN)
+                    self.play(Create(t2))
+                    self.wait(duration=3)
+                    t3 = Tex('Otherwise, we make x’s parent a new x and repeat the process from case 3.1.')
+                    t3.scale(0.5).to_edge(DOWN)
+                    self.play(ReplacementTransform(t2, t3))
+                    self.wait(duration=3)
+                    self.play(FadeOut(t3))
                     s.color = 1
                     x = x.p
                 else:
                     if (s.l).color == 0:
                         # case 3.3
+                        print("case 3.3")
+                        t1 = Tex('\\begin{flushleft}\\textbf{Case 3.3:}\\\\x’s sibling S is black, S’s left child is red,\\\\and S’s right child is black.\\end{flushleft}')
+                        t1.scale(0.5).to_edge(UR)
+                        self.play(Create(t1))
+                        self.wait(duration=2.5)
+                        t2 = Tex('We can switch the colors of S and its left child and then perform\\\\a right rotation on w without violating any of the properties.')
+                        t2.scale(0.5).to_edge(DOWN)
+                        self.play(Create(t2))
+                        self.wait(duration=3)
+                        t3 = Tex('This transforms the tree into case 3.4.')
+                        t3.scale(0.5).to_edge(DOWN)
+                        self.play(ReplacementTransform(t2, t3))
+                        self.wait(duration=3)
+                        self.play(FadeOut(t3))
                         (s.r).color = 0
                         s.color = 1
                         self.left_rotate_step(s, albero)
                         s = (x.p).l 
 
                     # case 3.4
+                    print("case 3.4")
+                    t1 = Tex('\\begin{flushleft}\\textbf{Case 3.4:}\\\\x ’s sibling S is black,\\\\and S’s right child is red.\\end{flushleft}')
+                    t1.scale(0.5).to_edge(UR)
+                    self.play(Create(t1))
+                    self.wait(duration=2.5)
+                    t2 = Tex('We change the color of S’s right child to black, x’s parent to black\\\\and perform the left rotation x’ parent node.')
+                    t2.scale(0.5).to_edge(DOWN)
+                    self.play(Create(t2))
+                    self.wait(duration=3)
+                    t3 = Tex('This way we remove the extra black node on x.')
+                    t3.scale(0.5).to_edge(DOWN)
+                    self.play(ReplacementTransform(t2, t3))
+                    self.wait(duration=3)
+                    self.play(FadeOut(t3))
                     s.color = (x.p).color
                     (x.p).color = 0
                     (s.l).color = 0
@@ -933,13 +1022,29 @@ class firstTreeScenes(Scene):
         # node not in the tree
         if z.v == (albero.TNULL).v:
             print ("Couldn't find value in the tree")
+            t1 = Tex('Couldn\' t find value in the tree.')
+            t1.scale(0.5).to_edge(RIGHT)
+            self.play(Create(t1))
+            self.wait(duration=2.5)
+            self.play(FadeOut(t1))
             return
+        
+        t1 = Tex('\\textbf{Deletion:} node ' + str(val))
+        t1.scale(0.5).to_edge(RIGHT)
+        self.play(Create(t1))
+        self.wait(duration=2.5)
+        self.play(FadeOut(t1))
         
         y = z
         y_original_color = y.color
         # the node is a leaf (left and right children are nil)
         if ((z.l).v == "Nil") and ((z.r).v == "Nil"):
             print("entra qui 1")
+            t1 = Tex('The node is a leaf.')
+            t1.scale(0.5).to_edge(RIGHT)
+            self.play(Create(t1))
+            self.wait(duration=2.5)
+            self.play(FadeOut(t1))
             position_z = z.pos
             parent = z.p
             ((z.l).lne).suspend_updating()
@@ -959,6 +1064,11 @@ class firstTreeScenes(Scene):
         # left child is nil
         elif ((z.l).v == "Nil"):
             print("entra qui 2")
+            t1 = Tex('Node\'s left child is Nil.')
+            t1.scale(0.5).to_edge(RIGHT)
+            self.play(Create(t1))
+            self.wait(duration=2.5)
+            self.play(FadeOut(t1))
             ((z.l).lne).suspend_updating()
             self.play(FadeOut(z.l), FadeOut((z.l).lne))
 
@@ -978,6 +1088,11 @@ class firstTreeScenes(Scene):
         # right child is nil
         elif ((z.r).v == "Nil"):
             print("entra qui 3")
+            t1 = Tex('Node\'s right child is Nil.')
+            t1.scale(0.5).to_edge(RIGHT)
+            self.play(Create(t1))
+            self.wait(duration=2.5)
+            self.play(FadeOut(t1))
             ((z.r).lne).suspend_updating()
             self.play(FadeOut(z.r), FadeOut((z.r).lne))
 
@@ -997,11 +1112,21 @@ class firstTreeScenes(Scene):
         # no nil children
         else:
             print("entra qui 4")
+            t1 = Tex('Node\'s children are not Nil.')
+            t1.scale(0.5).to_edge(RIGHT)
+            self.play(Create(t1))
+            self.wait(duration=2.5)
+            self.play(FadeOut(t1))
             y = albero.findSucc(z)
             y_original_color = y.color
             x = y.r
             if y.p == z:
                 print("entra qui 4.1")
+                t1 = Tex('Node\'s successor is node\'s son.')
+                t1.scale(0.5).to_edge(RIGHT)
+                self.play(Create(t1))
+                self.wait(duration=2.5)
+                self.play(FadeOut(t1))
                 position_z = z.pos
                 ((z.l).lne).suspend_updating()
                 ((z.r).lne).suspend_updating()
@@ -1038,7 +1163,18 @@ class firstTreeScenes(Scene):
         
         if y_original_color == 0:
             if x is not None:
+                t1 = Tex('\\begin{flushleft}\\textbf{Case 3:}\\\\the node is a black node.\\\\The property is violated.\\end{flushleft}')
+                t1.scale(0.5).to_edge(RIGHT)
+                self.play(Create(t1))
+                self.wait(duration=2.5)
+                self.play(FadeOut(t1))
                 self.__fix_delete(x, albero)
+        else:
+            t1 = Tex('\\begin{flushleft}\\textbf{Case 1:}\\\\the node is a red node.\\\\Delete x since deleting a red node doesn’t violate any property.\\end{flushleft}')
+            t1.scale(0.5).to_edge(RIGHT)
+            self.play(Create(t1))
+            self.wait(duration=2.5)
+            self.play(FadeOut(t1))
         
         self.wait(3)
         self.clearScene()
@@ -1092,24 +1228,15 @@ class firstTreeScenes(Scene):
         elements = VGroup(f1, bl, f2)
         self.play(FadeOut(elements))
 
-    #to modify color
     def insertionRules(self):
-        #r1 = Tex("RED")
-        #r1.set_color(RED).scale(0.5)
-        #b1 = Tex("BLACK")
-        #b1.set_color(DARK_GREY).scale(0.5)
         f1 = Tex("To insert a node K into a red-black tree T:")
         
         f1.to_edge(UP).set_color(TEAL_B)
         bl = BulletedList('Insert K using an ordinary BST insertion operation.',
                           'Color K red.',
                           'Check if the insertion violated the red-black tree properties\\\\and fix it.',
-                          #t2c={'red':RED},
-                          #tex_to_color_map={"red": RED},
-                          #set_color_by_tex={"red": RED},
                           buff=MED_SMALL_BUFF)
         bl.next_to(f1, DOWN, aligned_edge=LEFT).scale(0.5).move_to(LEFT)
-        #bl.set_color(set_color_by_tex={"red": RED})
         self.play(FadeInFromDown(f1))
         self.wait()
         self.play(FadeInFromDown(bl[0]))
@@ -1122,7 +1249,7 @@ class firstTreeScenes(Scene):
         elements = VGroup(f1, bl)
         self.play(FadeOut(elements))
 
-        f1 = Tex("\\begin{flushleft}To re-structure the tree\\\\in order to not violate the insertion we can:\\end{flushleft}")
+        f1 = Tex("\\begin{flushleft}To re-structure the tree\\\\in order to not violate the insertion we can use:\\end{flushleft}")
         f1.to_edge(UP).set_color(TEAL_B)
         bl = BulletedList('\\textbf{Left-Rotation:}\\\\The left rotation at node x makes x goes down\\\\in the left direction and as a result,\\\\its right child goes up. ',
                           '\\textbf{Right-Rotation:}\\\\The right rotation at node x makes x goes down\\\\in the right direction and as a result,\\\\its left child goes up.',
@@ -1140,6 +1267,50 @@ class firstTreeScenes(Scene):
         elements = VGroup(f1, bl)
         self.play(FadeOut(elements))
 
+    def deletionRules(self):
+        f1 = Tex("To delete a node K into a red-black tree T:")
+        
+        f1.to_edge(UP).set_color(TEAL_B)
+        bl = BulletedList('Find the node in the tree.',
+                          'Delete K and re-establish connections between nodes.',
+                          'Check if the deletion violated the red-black tree properties\\\\and fix it.',
+                          buff=MED_SMALL_BUFF)
+        bl.next_to(f1, DOWN, aligned_edge=LEFT).scale(0.5).move_to(LEFT)
+        self.play(FadeInFromDown(f1))
+        self.wait()
+        self.play(FadeInFromDown(bl[0]))
+        self.wait()
+        
+        self.play(FadeInFromDown(bl[1]))
+        self.wait()
+        self.play(FadeInFromDown(bl[2]))
+        self.wait(duration=3)
+        elements = VGroup(f1, bl)
+        self.play(FadeOut(elements))
+
+        f1 = Tex("\\begin{flushleft}To re-structure the tree\\\\in order to not violate the RB properties we can use:\\end{flushleft}")
+        f1.to_edge(UP).set_color(TEAL_B)
+        bl = BulletedList('\\textbf{Left-Rotation:}\\\\The left rotation at node x makes x goes down\\\\in the left direction and as a result,\\\\its right child goes up. ',
+                          '\\textbf{Right-Rotation:}\\\\The right rotation at node x makes x goes down\\\\in the right direction and as a result,\\\\its left child goes up.',
+                          '\\textbf{Recolor:}\\\\Recolor flips the color of a node.\\\\If it is red, it becomes black and vice-versa.',
+                          buff=MED_SMALL_BUFF)
+        bl.next_to(f1, DOWN, aligned_edge=LEFT).scale(0.5).move_to(LEFT)
+        self.play(FadeInFromDown(f1))
+        self.wait()
+        self.play(FadeInFromDown(bl[0]))
+        self.wait()
+        self.play(FadeInFromDown(bl[1]))
+        self.wait()
+        self.play(FadeInFromDown(bl[2]))
+        self.wait(duration=3)
+        elements = VGroup(f1, bl)
+        self.play(FadeOut(elements))
+
+# ----------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
+# HERE START THE SCENES
+# ----------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
 
 
         
@@ -1148,14 +1319,6 @@ class RBTree(firstTreeScenes):
     def construct(self):
 
         bst = RedBlackTree()
-        #bst.insert(8)
-        #bst.insert(18)
-        #bst.insert(5)
-        #bst.insert(15)
-        #bst.insert(17)
-        #bst.insert(25)
-        #bst.insert(40)
-        #bst.insert(80)
 
         #self.baseRules()
 
@@ -1169,12 +1332,9 @@ class RBTree(firstTreeScenes):
         
         node = bst.getRoot()
 
-        #self.delete_node(15, node, bst)
+        self.delete_node(15, node, bst)
         
         
-        #self.clearScene()
-        #self.printNode(node, bst)
-        #bst.pretty_print()
 
         self.wait(3)
 
