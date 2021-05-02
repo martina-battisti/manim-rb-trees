@@ -1319,16 +1319,15 @@ class test(firstTreeScenes):
         #dot1 = dot3
         self.play(Transform(dot1, dot3))
 
-        self.play(dot2.animate.move_to(UP*3))
-
-
-
-
-
-
-            
-            
-        
+        self.play(dot2.animate.move_to(UP*3))     
 
         self.wait(3)
 
+class test2(firstTreeScenes):
+    def construct(self):
+        val = 5
+        testo = Tex(str(val), color = WHITE)
+
+        self.add(testo)     
+
+        self.wait(3)
