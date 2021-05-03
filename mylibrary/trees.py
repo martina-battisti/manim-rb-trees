@@ -17,7 +17,8 @@ class Node(VGroup):
         super().__init__(**kwargs)
         #draw the node
         self.circle = Circle(radius = RAD, color = BLACK, stroke_color = WHITE)
-        self.text = Tex(str(val), color = WHITE) #the label
+        #self.text = Tex(str(val), color = WHITE) #the label
+        self.text = Tex(str(val)) #the label
         self.pos = self.get_center() #position of the node
         self.lne = Line(self.pos, self.pos, buff = RAD) #line from this node and the parent
         #self.lne = Line(buff = RAD) #line from this node and the parent
