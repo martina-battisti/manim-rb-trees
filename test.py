@@ -1325,9 +1325,13 @@ class test(firstTreeScenes):
 
 class test2(firstTreeScenes):
     def construct(self):
-        val = 5
+        val = 55
+        val2 = "prova"
         testo = Tex(str(val), color = WHITE)
+        testo2 = Tex(str(val2), color = WHITE)
 
-        self.add(testo)     
+        self.add(testo)  
+        self.wait(3)
+        self.play(Transform(testo, testo2))   
 
         self.wait(3)
