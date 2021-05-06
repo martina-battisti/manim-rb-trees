@@ -1259,6 +1259,7 @@ class firstTreeScenes(Scene):
             y.l = z.l
             (y.l).p = y
             y.color = z.color
+            y = albero.setColor(y)
         
         if y_original_color == 0:
             if x is not None:
