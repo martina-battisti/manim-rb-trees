@@ -8,6 +8,7 @@ OP: float = 1.0
 COL = WHITE
 LEAFRAD: float = 0.1
 LEAFCOL = BLACK
+VARIABLE = "Nil"
 
 
 class Node(VGroup):
@@ -319,7 +320,7 @@ class RedBlackTree(Tree):
         self.TNULL.r = None
         self.root = self.TNULL
         '''
-        self.root = Node('Nil')
+        self.root = Node(VARIABLE)
         #self.root = None
     
     def setColor(self, node):
