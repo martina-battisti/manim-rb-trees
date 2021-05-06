@@ -319,8 +319,8 @@ class RedBlackTree(Tree):
         self.TNULL.r = None
         self.root = self.TNULL
         '''
-        #self.root = Node("Nil")
-        self.root = None
+        self.root = Node('Nil')
+        #self.root = None
     
     def setColor(self, node):
         if node.color == 1:
