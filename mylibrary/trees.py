@@ -19,7 +19,7 @@ class Node(VGroup):
         #draw the node
         self.circle = Circle(radius = RAD, color = BLACK, stroke_color = WHITE)
         #self.text = Tex(str(val), color = WHITE) #the label
-        self.text = Text(str(val)).scale(0.3) #the label
+        self.text = Text(str(val)).scale(0.5) #the label
         #if val is not None:
             #self.text = Text(str(val)) #the label
         #else:
