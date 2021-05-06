@@ -320,7 +320,7 @@ class RedBlackTree(Tree):
         self.TNULL.r = None
         self.root = self.TNULL
         '''
-        self.root = Node(VARIABLE)
+        self.root = Node(0)
         #self.root = None
     
     def setColor(self, node):
