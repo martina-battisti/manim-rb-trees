@@ -19,7 +19,11 @@ class Node(VGroup):
         #draw the node
         self.circle = Circle(radius = RAD, color = BLACK, stroke_color = WHITE)
         #self.text = Tex(str(val), color = WHITE) #the label
-        self.text = Tex(str(val)) #the label
+        self.text = Text(str(val)) #the label
+        #if val is not None:
+            #self.text = Text(str(val)) #the label
+        #else:
+            #self.text = Tex("None")
         self.pos = self.get_center() #position of the node
         self.lne = Line(self.pos, self.pos, buff = RAD) #line from this node and the parent
         #self.lne = Line(buff = RAD) #line from this node and the parent
@@ -312,15 +316,16 @@ class Tree(VGroup):
     
 class RedBlackTree(Tree):
     def __init__(self):
-        '''
+        
+        #self.TNULL = Node("Nil")
         self.TNULL = Node("Nil")
         self.TNULL.color = 0
         (self.TNULL) = self.setColor((self.TNULL))
         self.TNULL.l = None
         self.TNULL.r = None
         self.root = self.TNULL
-        '''
-        self.root = Node(0)
+        
+        #self.root = Node(0)
         #self.root = None
     
     def setColor(self, node):
