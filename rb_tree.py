@@ -925,7 +925,9 @@ class firstTreeScenes(Scene):
                     self.wait(duration=3)
                     self.play(FadeOut(t3))
                     s.color = 0
+                    s = albero.setColor(s)
                     (x.p).color = 1
+                    x.p = albero.setColor(x.p)
                     self.left_rotate_step(x.p, albero)
                     s = (x.p).r
 
@@ -946,6 +948,7 @@ class firstTreeScenes(Scene):
                     self.wait(duration=3)
                     self.play(FadeOut(t3))
                     s.color = 1
+                    s = albero.setColor(s)
                     x = x.p
                 else:
                     if (s.r).color == 0:
@@ -965,7 +968,9 @@ class firstTreeScenes(Scene):
                         self.wait(duration=3)
                         self.play(FadeOut(t3))
                         (s.l).color = 0
+                        s.l = albero.setColor(s.l)
                         s.color = 1
+                        s = albero.setColor(s)
                         self.right_rotate_step(s, albero)
                         s = (x.p).r
 
@@ -985,8 +990,11 @@ class firstTreeScenes(Scene):
                     self.wait(duration=3)
                     self.play(FadeOut(t3))
                     s.color = (x.p).color
+                    s = albero.setColor(s)
                     (x.p).color = 0
+                    x.p = albero.setColor(x.p)
                     (s.r).color = 0
+                    s.r = albero.setColor(s.r)
                     self.left_rotate_step(x.p, albero)
                     x = albero.root
             #x is right soon
@@ -1009,7 +1017,9 @@ class firstTreeScenes(Scene):
                     self.wait(duration=3)
                     self.play(FadeOut(t3))
                     s.color = 0
+                    s = albero.setColor(s)
                     (x.p).color = 1
+                    x.p = albero.setColor(x.p)
                     self.right_rotate_step(x.p, albero)
                     s = (x.p).l
 
@@ -1030,6 +1040,7 @@ class firstTreeScenes(Scene):
                     self.wait(duration=3)
                     self.play(FadeOut(t3))
                     s.color = 1
+                    s = albero.setColor(s)
                     x = x.p
                 else:
                     if (s.l).color == 0:
@@ -1049,7 +1060,9 @@ class firstTreeScenes(Scene):
                         self.wait(duration=3)
                         self.play(FadeOut(t3))
                         (s.r).color = 0
+                        s.r = albero.setColor(s.r)
                         s.color = 1
+                        s = albero.setColor(s)
                         self.left_rotate_step(s, albero)
                         s = (x.p).l 
 
@@ -1069,16 +1082,19 @@ class firstTreeScenes(Scene):
                     self.wait(duration=3)
                     self.play(FadeOut(t3))
                     s.color = (x.p).color
+                    s = albero.setColor(s)
                     (x.p).color = 0
+                    x.p = albero.setColor(x.p)
                     (s.l).color = 0
+                    s.l = albero.setColor(s.l)
                     self.right_rotate_step(x.p, albero)
                     x = albero.root
         #print(x.p.v)
         if x is not None:
-            x.color = 0
+            x.color = 0    
         elif x.v == (albero.TNULL).v:
             x.color = 0
-
+        x = albero.setColor(x)
 
     # substitute u with v
     def __rb_transplant(self, u, v, albero):
