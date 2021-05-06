@@ -311,12 +311,15 @@ class Tree(VGroup):
     
 class RedBlackTree(Tree):
     def __init__(self):
+        '''
         self.TNULL = Node("Nil")
         self.TNULL.color = 0
         (self.TNULL) = self.setColor((self.TNULL))
         self.TNULL.l = None
         self.TNULL.r = None
         self.root = self.TNULL
+        '''
+        self.root = Node("Nil")
     
     def setColor(self, node):
         if node.color == 1:
@@ -594,7 +597,8 @@ class RedBlackTree(Tree):
     # print the tree structure (secondary function)
     def __print_helper(self, node, indent, last):
         
-        if node != self.TNULL:
+        #if node != self.TNULL:
+        if node.v != "Nil":
             sys.stdout.write(indent)
             if last:
                 sys.stdout.write("R----")
