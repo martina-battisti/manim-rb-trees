@@ -44,6 +44,7 @@ class firstTreeScenes(Scene):
                         run_time=RUN_TIME_1,
                         )
             else:
+                node.lne = always_redraw(lambda: Line((node.p).get_center(), node.pos, buff=RAD))
                 self.play(Create((node).move_to(node.pos)), 
                         Create(node.lne),
                         run_time=RUN_TIME_1,
@@ -133,7 +134,7 @@ class firstTreeScenes(Scene):
             tmpr = node.r
             tmpl = node.l
             if tmpl is not None:
-                self.play(Create((left).move_to(left_pos)),
+                self.play(Create((node.l).move_to((node.l).pos)),
                         run_time=RUN_TIME_1,
                         )
                 while node is not None:
@@ -142,7 +143,7 @@ class firstTreeScenes(Scene):
                 self.scrollNode(tmpl, albero)
             node = tmp
             if tmpr is not None:
-                self.play(Create((right).move_to(right_pos)),
+                self.play(Create((node.r).move_to((node.r).pos)),
                         run_time=RUN_TIME_1,
                         )
                 while node is not None:
@@ -551,10 +552,12 @@ class firstTreeScenes(Scene):
             y.d = y.d - 1
             albero.returnTree(y)
             
-            self.play((y.l).animate.move_to((y.l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            (y.l).pos = (y.l).get_center()
+            #self.play((y.l).animate.move_to((y.l).pos),
+                        #run_time=RUN_TIME_1,
+                        #)
+            #(y.l).pos = (y.l).get_center()
+            #------------HERE---------------
+            self.updateTree(y.l)
             
             # move y and right subtree
             if x == ((x.p).r):
@@ -870,7 +873,7 @@ class firstTreeScenes(Scene):
                         t2.scale(0.5).to_edge(DOWN)
                         self.play(Create(t2))
                         self.wait(duration=3)
-                        t3 = Tex('Next, we perform the right-rotation at G that makes G the new sibling S of K.\\\\Next, we change the color of S to red and P to black.')
+                        t3 = Tex('We perform the right-rotation at G that makes G the new sibling S of K.\\\\Next, we change the color of S to red and P to black.')
                         t3.scale(0.5).to_edge(DOWN)
                         self.play(ReplacementTransform(t2, t3))
                         self.wait(duration=3)
@@ -883,11 +886,11 @@ class firstTreeScenes(Scene):
                     t1.scale(0.5).to_edge(UR)
                     self.play(Create(t1))
                     self.wait(duration=2.5)
-                    t2 = Tex('We first perform the right-rotation at G that makes G the new sibling S of K.')
+                    t2 = Tex('We change the color of S to red and P to black.')
+                    t3 = Tex('We perform the right-rotation at G that makes G the new sibling S of K.')
                     t2.scale(0.5).to_edge(DOWN)
                     self.play(Create(t2))
                     self.wait(duration=3)
-                    t3 = Tex('Next, we change the color of S to red and P to black.')
                     t3.scale(0.5).to_edge(DOWN)
                     self.play(ReplacementTransform(t2, t3))
                     self.wait(duration=3)
@@ -1452,8 +1455,58 @@ class RBTree2(firstTreeScenes):
         self.play(Create(code))
         self.wait(3)
         self.play(FadeOut(code))
+        f1 = Tex("To introduce red-black trees is important\\\\to know the rules of binary search trees:")
+        f1.to_edge(UP).scale(0.8).set_color(PURPLE_C)
+        bl = BulletedList('{\\small Every node can have only two subtrees. (Two sons)}',
+                          '{\\small The tree is ordered.\\\\ Left nodes are smaller, right nodes are larger.}',
+                          buff=MED_SMALL_BUFF)
+        bl.scale(0.7)
+        self.play(FadeIn(f1))
+        self.wait()
+        self.play(Write(bl[0]))
+        self.wait()
+        self.play(Write(bl[1]))
+        self.wait()
+        self.play(bl.animate.next_to(f1, DOWN))
+        elements = VGroup(f1, bl)
+        self.play(elements.animate.scale(0.9).to_edge(LEFT).to_edge(DOWN))
+
+        
+
+        albero = Tree()
+        albero.addd(13)
+        albero.addd(3)
+        albero.addd(23)
+        albero.addd(16)
+        node = albero.getRoot()
+        self.printNode(node, albero)
+        
+        #self.play((elements.scale(0.9).to_edge(LEFT)))
+        self.wait(3)
+        self.clearScene()
+        self.add(elements)
+
+        albero2 = Tree()
+        albero2.addd(1)
+        albero2.addd(3)
+        albero2.addd(10)
+        albero2.addd(26)
+        albero2.addd(15)
+        node2 = albero2.getRoot()
+        self.printNode(node2, albero2)
+
+        f2 = Tex("If the tree is unbalanced, as in the example, the complexity is greater.")
+        f3 = Tex("For this reason we introduce the concept of balanced search trees,\\\\among the variants we will illustrate the red and black trees.")
+        f2.to_edge(LEFT).scale(0.5)
+        f3.to_edge(LEFT).scale(0.5)
+        self.play(FadeIn(f2))
+        self.wait(3)
+        self.play(Transform(f2, f3))
+        self.wait(4)
+        self.clearScene()
+        #self.play(FadeOut(elements))
         self.baseRules()
-        #self.insertionRules()
+        
 
         self.wait(3)
 
@@ -1539,7 +1592,7 @@ class firstTree(firstTreeScenes):
         self.play(Create(t1))
         self.wait(duration=1.5)
 
-        self.play(VGroup(t1).shift, UP * 1.5)
+        self.play((t1).animate.shift(UP * 1.5))
 
         albero = Tree()
         albero.addd(13)
