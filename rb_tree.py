@@ -356,13 +356,6 @@ class firstTreeScenes(Scene):
                         (x.l).animate.shift(DL),
                         run_time=RUN_TIME_1,
                         )
-            (y.r.lne).suspend_updating()
-            x.d = x.d + 1
-            albero.returnTree(x)
-
-            self.play((x.l).animate.move_to((x.l).pos),
-                        run_time=RUN_TIME_1,
-                        )
 
             self.remove((y.l).lne)
             x.r = y.l
@@ -370,13 +363,16 @@ class firstTreeScenes(Scene):
             (x.r).p = x
             (x.r).lne = always_redraw(lambda: Line((x.r).get_center(), ((x.r).p).get_center(), buff=RAD))
             self.add((x.r).lne)
+            x.d = x.d + 1
             albero.returnTree(x)
+
+            self.play((x.l).animate.move_to((x.l).pos),
+                        run_time=RUN_TIME_1,
+                        )
             self.play((x.r).animate.move_to((x.r).pos),
                         run_time=RUN_TIME_1,
                         )
-            self.remove((y.r).lne)
-            (y.r).lne = always_redraw(lambda: Line((y.r).get_center(), ((y.r).p).get_center(), buff=RAD))
-            self.add((y.r).lne)
+           
             self.play((y).animate.move_to(position_x),
                         run_time=RUN_TIME_1,
                         )
@@ -387,32 +383,32 @@ class firstTreeScenes(Scene):
             self.play((y.r).animate.move_to((y.r).pos),
                         run_time=RUN_TIME_1,
                         )
+
             albero.returnTree(y.r)
-            self.play(((y.r).l).animate.move_to(((y.r).l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            self.play(((y.r).r).animate.move_to(((y.r).r).pos),
-                        run_time=RUN_TIME_1,
-                        )
+            self.updateTree(y.r)
+
             
         else:
             
             albero.returnTree(x.p)
             (y).lne = always_redraw(lambda: Line(y.get_center(), (y.p).get_center(), buff=RAD))
-            self.add(y.lne)
+            (x).lne = always_redraw(lambda: Line(x.get_center(), (y).get_center(), buff=RAD))
+            self.add(y.lne, x.lne)
             self.play((y).animate.move_to(x.pos),
+                        (x).animate.move_to((x.l).pos),
+                        (x.l).animate.shift(DL),
                         run_time=RUN_TIME_1,
                         )
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
             self.updateTree(y.r)
-            '''
-            self.play((y.r).animate.move_to((y.r).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            (y.r).pos = (y.r).get_center()
-            '''
+
+            x.pos = x.get_center()
+            x.d = x.d + 1
+            (x.l).p = x
+            albero.returnTree(x)
+            
             # move y and right subtree
             if x == ((x.p).l):
                 ((y.p).l) = y # y is left soon
@@ -428,13 +424,6 @@ class firstTreeScenes(Scene):
             x.p = y     # y is x parent
             (x).lne = always_redraw(lambda: Line(x.get_center(), (x.p).get_center(), buff=RAD))
             self.add(x.lne)
-            self.play((x).animate.move_to((x.l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            x.pos = x.get_center()
-            x.d = x.d + 1
-            (x.l).p = x
-            albero.returnTree(x)
             
             (x.l).lne = always_redraw(lambda: Line((x.l).get_center(), ((x.l).p).get_center(), buff=RAD))
             self.add((x.l).lne)
@@ -520,6 +509,7 @@ class firstTreeScenes(Scene):
             self.add((x.l).lne)
             x.d = x.d + 1
             albero.returnTree(x)
+
             self.play((x.r).animate.move_to((x.r).pos),
                         run_time=RUN_TIME_1,
                         )
@@ -533,39 +523,34 @@ class firstTreeScenes(Scene):
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
+
             self.play((y.l).animate.move_to((y.l).pos),
                         run_time=RUN_TIME_1,
                         )
             
-            #self.updateTree(y.l)
             albero.returnTree(y.l) 
             self.updateTree(y.l)
-            '''         
-            self.play(((y.l).l).animate.move_to(((y.l).l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            self.play(((y.l).r).animate.move_to(((y.l).r).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            '''
+            
         else:
             
             albero.returnTree(x.p)
             (y).lne = always_redraw(lambda: Line(y.get_center(), (y.p).get_center(), buff=RAD))
-            self.add(y.lne)
+            (x).lne = always_redraw(lambda: Line(x.get_center(), (y).get_center(), buff=RAD))
+            self.add(y.lne, x.lne)
             self.play((y).animate.move_to(x.pos),
+                        (x).animate.move_to((x.l).pos),
+                        (x.l).animate.shift(DR),
                         run_time=RUN_TIME_1,
                         )
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
             self.updateTree(y.l)
-            '''
-            self.play((y.l).animate.move_to((y.l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            (y.l).pos = (y.l).get_center()
-            '''
+
+            x.pos = x.get_center()
+            x.d = x.d + 1
+            (x.r).p = x
+            albero.returnTree(x)            
             
             # move y and right subtree
             if x == ((x.p).r):
@@ -582,13 +567,6 @@ class firstTreeScenes(Scene):
             x.p = y     # y is x parent
             (x).lne = always_redraw(lambda: Line(x.get_center(), (x.p).get_center(), buff=RAD))
             self.add(x.lne)
-            self.play((x).animate.move_to((x.r).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            x.pos = x.get_center()
-            x.d = x.d + 1
-            (x.r).p = x
-            albero.returnTree(x)
             
             (x.r).lne = always_redraw(lambda: Line((x.r).get_center(), ((x.r).p).get_center(), buff=RAD))
             self.add((x.r).lne)
