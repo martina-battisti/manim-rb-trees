@@ -6,7 +6,7 @@ from manim import *
 from mylibrary.trees import Node, Tree, RedBlackTree
 
 RAD = 0.4
-RUN_TIME_1 = 3
+RUN_TIME_1 = 2
 #https://algorithmtutor.com/Data-Structures/Tree/Red-Black-Trees/
 
 #base scene for all tree scenes
@@ -69,6 +69,8 @@ class firstTreeScenes(Scene):
                 node.pos = node.get_center() 
                 self.add((node).move_to(node.pos))
             else:
+                if node.p is not None:
+                    node.lne = always_redraw(lambda: Line((node.p).get_center(), node.pos, buff=RAD))
                 self.add((node).move_to(node.pos), node.lne)
             albero.returnTree(node) #for Nill nodes
             tmp = node    
@@ -378,7 +380,8 @@ class firstTreeScenes(Scene):
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
-
+            self.updateTree(y.r)
+            '''
             self.play((y.r).animate.move_to((y.r).pos),
                         run_time=RUN_TIME_1,
                         )
@@ -389,6 +392,7 @@ class firstTreeScenes(Scene):
             self.play(((y.r).r).animate.move_to(((y.r).r).pos),
                         run_time=RUN_TIME_1,
                         )
+            '''
         else:
             
             albero.returnTree(x.p)
@@ -400,12 +404,13 @@ class firstTreeScenes(Scene):
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
-            
+            self.updateTree(y.r)
+            '''
             self.play((y.r).animate.move_to((y.r).pos),
                         run_time=RUN_TIME_1,
                         )
             (y.r).pos = (y.r).get_center()
-            
+            '''
             # move y and right subtree
             if x == ((x.p).l):
                 ((y.p).l) = y # y is left soon
@@ -499,18 +504,22 @@ class firstTreeScenes(Scene):
             self.add(x.lne, (y.r).lne)
 
             position_x = x.pos
-
-            self.play((x).animate.move_to((x.r).pos),
+            x.pos = (x.r).pos
+            #x.d = x.d + 1
+            #albero.returnTree(x)
+            self.play((x).animate.move_to(x.pos),
+                        (x.r).animate.shift(DR),
                         run_time=RUN_TIME_1,
                         )
-            x.pos = x.get_center()
+            (y.l.lne).suspend_updating()
+            #x.pos = x.get_center()
             x.d = x.d + 1
             albero.returnTree(x)
-
+            
             self.play((x.r).animate.move_to((x.r).pos),
                         run_time=RUN_TIME_1,
                         )
-
+            
             self.remove((y.r).lne)
             x.l = y.r
             y.r = x
@@ -521,25 +530,31 @@ class firstTreeScenes(Scene):
             self.play((x.l).animate.move_to((x.l).pos),
                         run_time=RUN_TIME_1,
                         )
-            
+            #((y.l).lne).resume_updating()
+            self.remove((y.l).lne)
+            (y.l).lne = always_redraw(lambda: Line((y.l).get_center(), ((y.l).p).get_center(), buff=RAD))
+            self.add((y.l).lne)
             self.play((y).animate.move_to(position_x),
                         run_time=RUN_TIME_1,
                         )
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
-
+            
+            
             self.play((y.l).animate.move_to((y.l).pos),
                         run_time=RUN_TIME_1,
                         )
             albero.returnTree(y.l)
+            #self.updateTree(y.l)
+            
             self.play(((y.l).l).animate.move_to(((y.l).l).pos),
                         run_time=RUN_TIME_1,
                         )
             self.play(((y.l).r).animate.move_to(((y.l).r).pos),
                         run_time=RUN_TIME_1,
                         )
-
+            
         else:
             
             albero.returnTree(x.p)
@@ -551,12 +566,12 @@ class firstTreeScenes(Scene):
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
-            
-            #self.play((y.l).animate.move_to((y.l).pos),
-                        #run_time=RUN_TIME_1,
-                        #)
-            #(y.l).pos = (y.l).get_center()
-            #------------HERE---------------
+            '''
+            self.play((y.l).animate.move_to((y.l).pos),
+                        run_time=RUN_TIME_1,
+                        )
+            (y.l).pos = (y.l).get_center()
+            '''
             self.updateTree(y.l)
             
             # move y and right subtree
@@ -633,7 +648,7 @@ class firstTreeScenes(Scene):
         y = None
         x = albero.root
 
-        t1 = Tex('\\textbf{Insertion:} the new node is ' + str(val))
+        t1 = Tex('\\textbf{Insertion:}\\\\the new node is ' + str(val))
         t1.scale(0.5).to_edge(RIGHT)
         self.play(Create(t1))
         self.wait(duration=2.5)
@@ -684,11 +699,7 @@ class firstTreeScenes(Scene):
             
             albero.returnTree(node)
             self.play(((node).r).animate.move_to(((node).r).pos),
-                        #Create(((node).r).lne),
-                        run_time=RUN_TIME_1,
-                        )
-            self.play(((node).l).animate.move_to(((node).l).pos),
-                        #Create(((node).l).lne),
+                        ((node).l).animate.move_to(((node).l).pos),
                         run_time=RUN_TIME_1,
                         )
             self.add(((node.l).lne), ((node.r).lne))
@@ -697,7 +708,7 @@ class firstTreeScenes(Scene):
             print("case 1")
             node.color = 0
             t1 = Tex('\\begin{flushleft}\\textbf{Case 1:}\\\\the new node is a root node\\\\it is a black node\\end{flushleft}')
-            t1.scale(0.5).to_edge(RIGHT)
+            t1.scale(0.5).to_edge(RIGHT).to_edge(UP)
             self.play(Create(t1))
             self.wait(duration=2.5)
             node = albero.setColor(node)
@@ -721,15 +732,12 @@ class firstTreeScenes(Scene):
                         )
             albero.returnTree(y.l)
             ((y.l).r).move_to((y.l).pos)
-            self.play(((y.l).r).animate.move_to(((y.l).r).pos),
-                        #Create(((y.l).r).lne),
-                        run_time=RUN_TIME_1,
-                        )
             ((y.l).l).move_to((y.l).pos)
-            self.play(((y.l).l).animate.move_to(((y.l).l).pos),
-                        #Create(((y.l).l).lne),
+            self.play(((y.l).r).animate.move_to(((y.l).r).pos),
+                        ((y.l).l).animate.move_to(((y.l).l).pos),
                         run_time=RUN_TIME_1,
                         )
+            
             self.add((((y.l).l).lne), (((y.l).r).lne))
         else:
             #new node is the right child
@@ -748,15 +756,12 @@ class firstTreeScenes(Scene):
                         )
             albero.returnTree(y.r)
             ((y.r).r).move_to((y.r).pos)
-            self.play(((y.r).r).animate.move_to(((y.r).r).pos),
-                        #Create(((y.r).r).lne),
-                        run_time=RUN_TIME_1,
-                        )
             ((y.r).l).move_to((y.r).pos)
-            self.play(((y.r).l).animate.move_to(((y.r).l).pos),
-                        #Create(((y.r).l).lne),
+            self.play(((y.r).r).animate.move_to(((y.r).r).pos),
+                        ((y.r).l).animate.move_to(((y.r).l).pos),
                         run_time=RUN_TIME_1,
                         )
+            
             self.add((((y.r).l).lne), (((y.r).r).lne))
 
         # if the grandparent is None, simply return
@@ -825,7 +830,7 @@ class firstTreeScenes(Scene):
                     t2.scale(0.5).to_edge(DOWN)
                     self.play(Create(t2))
                     self.wait(duration=3)
-                    t3 = Tex('Next, we change the color of S to red and P to black.')
+                    t3 = Tex('We change the color of S to red and P to black.')
                     t3.scale(0.5).to_edge(DOWN)
                     self.play(ReplacementTransform(t2, t3))
                     self.wait(duration=3)
@@ -1300,7 +1305,6 @@ class firstTreeScenes(Scene):
             self.updateTree(node.l)
         if node.r is not None:
             self.updateTree(node.r)
-
             
 
     # RULES
@@ -1346,7 +1350,6 @@ class firstTreeScenes(Scene):
         self.wait()
         self.play(FadeIn(bl[0]))
         self.wait()
-        
         self.play(FadeIn(bl[1]))
         self.wait()
         self.play(FadeIn(bl[2]))
@@ -1354,7 +1357,7 @@ class firstTreeScenes(Scene):
         elements = VGroup(f1, bl)
         self.play(FadeOut(elements))
 
-        f1 = Tex("\\begin{flushleft}To re-structure the tree\\\\in order to not violate the insertion we can use:\\end{flushleft}")
+        f1 = Tex("To re-structure the tree\\\\in order to not violate the insertion we can use:")
         f1.to_edge(UP).set_color(TEAL_B)
         bl = BulletedList('\\textbf{Left-Rotation:}\\\\The left rotation at node x makes x goes down\\\\in the left direction and as a result,\\\\its right child goes up. ',
                           '\\textbf{Right-Rotation:}\\\\The right rotation at node x makes x goes down\\\\in the right direction and as a result,\\\\its left child goes up.',
@@ -1368,7 +1371,7 @@ class firstTreeScenes(Scene):
         self.play(FadeIn(bl[1]))
         self.wait()
         self.play(FadeIn(bl[2]))
-        self.wait(duration=3)
+        self.wait(duration=5)
         elements = VGroup(f1, bl)
         self.play(FadeOut(elements))
 
@@ -1393,7 +1396,7 @@ class firstTreeScenes(Scene):
         elements = VGroup(f1, bl)
         self.play(FadeOut(elements))
 
-        f1 = Tex("\\begin{flushleft}To re-structure the tree\\\\in order to not violate the RB properties we can use:\\end{flushleft}")
+        f1 = Tex("\\begin{flushleft}To re-structure the tree in order to not violate\\\\the RB properties we can use:\\end{flushleft}")
         f1.to_edge(UP).set_color(TEAL_B)
         bl = BulletedList('\\textbf{Left-Rotation:}\\\\The left rotation at node x makes x goes down\\\\in the left direction and as a result,\\\\its right child goes up. ',
                           '\\textbf{Right-Rotation:}\\\\The right rotation at node x makes x goes down\\\\in the right direction and as a result,\\\\its left child goes up.',
@@ -1418,15 +1421,12 @@ class firstTreeScenes(Scene):
 # ----------------------------------------------------------------------------------------
 
 
-        
-
 class RBTree(firstTreeScenes):
     def construct(self):
 
         bst = RedBlackTree()
 
         #self.baseRules()
-
         #self.insertionRules()
 
         self.insert(15, bst)
@@ -1434,57 +1434,59 @@ class RBTree(firstTreeScenes):
         self.insert(6, bst)
         self.insert(20, bst)
         #self.insert(10, bst)
-        
         node = bst.getRoot()
 
         self.delete_node(15, node, bst)
-        
-        
-
         self.wait(3)
 
 class RBTree2(firstTreeScenes):
     def construct(self):
 
-        bst = RedBlackTree()
-        code = Tex(r"RED", r"BLACK", r"TREES", 
+        title = Tex(r"RED", r"BLACK", r"TREES", 
             background_stroke_width=1, 
             background_stroke_color=WHITE)
-        code.set_color_by_tex('RED', RED)
-        code.set_color_by_tex('BLACK', BLACK)
-        self.play(Create(code))
+        title.set_color_by_tex('RED', RED)
+        title.set_color_by_tex('BLACK', BLACK)
+        self.play(Create(title))
         self.wait(3)
-        self.play(FadeOut(code))
-        f1 = Tex("To introduce red-black trees is important\\\\to know the rules of binary search trees:")
-        f1.to_edge(UP).scale(0.8).set_color(PURPLE_C)
-        bl = BulletedList('{\\small Every node can have only two subtrees. (Two sons)}',
+        self.play(FadeOut(title))
+        bst = Tex("To introduce red-black trees it is important\\\\to know the rules of binary search trees:")
+        bst.to_edge(UP).scale(0.8).set_color(PURPLE_C)
+        bst_bl = BulletedList('{\\small Every node can have only two subtrees. (Two sons)}',
                           '{\\small The tree is ordered.\\\\ Left nodes are smaller, right nodes are larger.}',
                           buff=MED_SMALL_BUFF)
-        bl.scale(0.7)
-        self.play(FadeIn(f1))
+        bst_bl.scale(0.7)
+        self.play(FadeIn(bst))
         self.wait()
-        self.play(Write(bl[0]))
+        self.play(Write(bst_bl[0]))
         self.wait()
-        self.play(Write(bl[1]))
+        self.play(Write(bst_bl[1]))
         self.wait()
-        self.play(bl.animate.next_to(f1, DOWN))
-        elements = VGroup(f1, bl)
-        self.play(elements.animate.scale(0.9).to_edge(LEFT).to_edge(DOWN))
-
-        
+        self.play(bst_bl.animate.next_to(bst, DOWN))
+        bst_group = VGroup(bst, bst_bl)
+        self.play(bst_group.animate.scale(0.9).to_edge(LEFT).to_edge(DOWN))
+        rect_bst_group = SurroundingRectangle(bst_group, color = WHITE)
+        self.add(rect_bst_group)
 
         albero = Tree()
         albero.addd(13)
         albero.addd(3)
         albero.addd(23)
         albero.addd(16)
+        albero.addd(1)
+        albero.addd(5)
         node = albero.getRoot()
         self.printNode(node, albero)
         
-        #self.play((elements.scale(0.9).to_edge(LEFT)))
         self.wait(3)
         self.clearScene()
-        self.add(elements)
+        self.add(bst_group, rect_bst_group)
+
+        albero2_txt = Tex("Let's see another example:")
+        albero2_txt.scale(0.8).to_edge(UP)
+        self.play(Write(albero2_txt))
+        self.wait(2)
+        self.play(FadeOut(albero2_txt))
 
         albero2 = Tree()
         albero2.addd(1)
@@ -1504,28 +1506,67 @@ class RBTree2(firstTreeScenes):
         self.play(Transform(f2, f3))
         self.wait(4)
         self.clearScene()
-        #self.play(FadeOut(elements))
         self.baseRules()
-        
-
-        self.wait(3)
-
-class RBTree3(firstTreeScenes):
-    def construct(self):
-
-        bst = RedBlackTree()
-        txt1 = Text("let's see an example")
-        txt1.scale(0.8)
-        txt2 = Text("we insert the nodes inside the red black tree")
-        txt2.scale(0.8)
+        self.clearScene()
+        txt1 = Text("Let's see an example.")
+        txt1.scale(0.6)
+        txt2 = Text("We insert step by step the nodes inside the red black tree.")
+        txt2.scale(0.6)
         self.play(Create(txt1))
         self.wait(3)
         self.play(Transform(txt1, txt2))
         self.wait(3)
         self.play(FadeOut(txt1))
-        #self.baseRules()
         self.insertionRules()
         self.wait(3)
+        case1 = Text("CASE: the tree is balanced")
+        case1.scale(0.6).to_edge(UP).to_edge(LEFT)
+        case1bis = Text("In this example we use only Recolor function")
+        case1bis.scale(0.4).next_to(case1, DOWN)
+        self.play(Write(case1), Write(case1bis))
+        bl = BulletedList('{\\small 1) Every node in T is either red or black.}',
+                          '{\\small 2) The root node of T is black.}',
+                          '{\\small 3) Every Nill node is black.} \\tiny{(NULL nodes are the leaf nodes. They do not contain any keys.)}',
+                          '{\\small 4) If a node is red, both of its children are black. This means no two nodes on a path can be red nodes.}',
+                          '{\\small 5) Every path from a root node to a Nill node has the same number of black nodes.}',
+                          buff=MED_SMALL_BUFF)
+        bl.to_edge(DOWN).scale(0.5).shift(UP)
+        rect = SurroundingRectangle(bl, color = WHITE)
+        self.add(bl, rect)
+        
+        bst1 = RedBlackTree()
+        self.insert(10, bst1)
+        self.insert(7, bst1)
+        self.insert(16, bst1)
+        self.insert(3, bst1)
+        self.insert(18, bst1)
+        
+        self.wait(3)
+        self.clearScene()
+        
+        case2 = Text("CASE: the tree is unbalanced")
+        case2.scale(0.6).to_edge(UP).to_edge(LEFT)
+        case2bis = Text("Recolor and Rotation functions")
+        case2bis.scale(0.4).next_to(case2, DOWN)
+        self.play(Write(case2), Write(case2bis))
+        bst2 = RedBlackTree()
+        #self.insert(20, bst2)
+        #self.insert(7, bst2)
+        #self.insert(3, bst2)
+        #self.insert(16, bst2)
+        #self.insert(18, bst2)
+        finish = Text("Now the tree is balanced.")
+        finish.scale(0.6).to_edge(DOWN)
+        
+        self.add(case2, case2bis)
+        self.play(Write(finish))
+        bl.next_to(finish, UP)
+        rect = SurroundingRectangle(bl, color = WHITE)
+        self.add(bl, rect)
+        self.wait(3)
+        self.clearScene()
+
+
 
 class RBTree4(firstTreeScenes):
     def construct(self):
@@ -1534,8 +1575,8 @@ class RBTree4(firstTreeScenes):
         self.insert(20, bst)
         self.insert(7, bst)
         self.insert(3, bst)
-        self.insert(16, bst)
-        self.insert(18, bst)
+        #self.insert(16, bst)
+        #self.insert(18, bst)
         self.wait(3)
 
 class deleteTree(firstTreeScenes):
