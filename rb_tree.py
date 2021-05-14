@@ -607,8 +607,414 @@ class firstTreeScenes(Scene):
 
         self.wait(3)
 
+    # rotate left at node x (visualization)
+    def left_rotate(self, x, albero):
+        self.clearScene()
+        root = albero.getRoot()
+        self.printNodeOneShot(root, albero)
+        print("left_rotate")
+        
+        y = x.r # y is x's right soon
+        
+        # Turn y's left subtree into x's right subtree
+        self.remove (y.lne, x.lne, (y.l).lne)
+        
+        if (y.l).v != (albero.TNULL).v:
+            (y.l).p = x
+        y.p = x.p   # y becomes soon of x's parent
+
+        if x.p == None:
+
+            (y.lne).suspend_updating()
+
+            albero.root = y
+            y.p = x.p
+            x.p = y
+            x.lne = always_redraw(lambda: Line(x.get_center(), (x.p).get_center(), buff=RAD))
+            self.add(x.lne, (y.l).lne)
+
+            position_x = x.pos
+            x.pos = (x.l).pos
+            
+            self.remove((y.l).lne)
+            x.r = y.l
+            y.l = x
+            (x.r).p = x
+            (x.r).lne = always_redraw(lambda: Line((x.r).get_center(), ((x.r).p).get_center(), buff=RAD))
+            self.add((x.r).lne)
+            x.d = x.d + 1
+            albero.returnTree(x)
+
+            y.pos = position_x
+            y.d = y.d - 1
+            albero.returnTree(y)
+
+            albero.returnTree(y.r)
+            #self.updateTree(y.r)
+            
+        else:
+            
+            albero.returnTree(x.p)
+            (y).lne = always_redraw(lambda: Line(y.get_center(), (y.p).get_center(), buff=RAD))
+            (x).lne = always_redraw(lambda: Line(x.get_center(), (y).get_center(), buff=RAD))
+            self.add(y.lne, x.lne)
+
+            y.pos = x.pos
+            y.d = y.d - 1
+            albero.returnTree(y)
+            #self.updateTree(y.r)
+
+            x.pos = (x.l).pos
+            x.d = x.d + 1
+            (x.l).p = x
+            albero.returnTree(x)
+            
+            # move y and right subtree
+            if x == ((x.p).l):
+                ((y.p).l) = y # y is left soon
+            else:
+                ((y.p).r) = y # y is right soon
+            
+            self.remove((x.l).lne) #this is a problem!!!
+            
+            (x.l).lne = always_redraw(lambda: Line((x.l).get_center(), (x).get_center(), buff=RAD))
+            self.add((x.l).lne)
+            
+            # move x and subtrees
+            x.p = y     # y is x parent
+            (x).lne = always_redraw(lambda: Line(x.get_center(), (x.p).get_center(), buff=RAD))
+            self.add(x.lne)
+            
+            (x.l).lne = always_redraw(lambda: Line((x.l).get_center(), ((x.l).p).get_center(), buff=RAD))
+            self.add((x.l).lne)
+
+            self.remove((x.r).lne)
+            
+            (y.l).lne = always_redraw(lambda: Line((y.l).get_center(), (x).get_center(), buff=RAD))
+            (y).lne = always_redraw(lambda: Line((y).get_center(), (y.p).get_center(), buff=RAD))
+            self.add((y.l).lne, y.lne)
+            
+            (y.l).pos = (x.r).pos
+
+            ((y.r).lne).suspend_updating()
+            x.r = y.l #subtree B (y.left) becomes x's right soon
+            (y.l).p = x
+
+            y.l = x     # x is left soon of y
+
+            (x.r).lne = always_redraw(lambda: Line((x.r).get_center(), ((x.r).p).get_center(), buff=RAD))
+            self.add((x.r).lne)
+            
+        '''
+        self.wait(3)
+        self.clearScene()
+        root = albero.getRoot()
+        print(root.v)
+        albero.returnTree(root)
+        self.printNodeOneShot(root, albero)
+
+        self.wait(3)
+        '''
+
+    # rotate right at node x
+    def right_rotate(self, x, albero):
+        self.clearScene()
+        root = albero.getRoot()
+        self.printNodeOneShot(root, albero)
+        print("right_rotate")
+        
+        y = x.l # y is x's left soon
+        
+        # Turn y's right subtree into x's left subtree
+        self.remove(y.lne, x.lne, (y.r).lne)
+
+        if (y.r).v != (albero.TNULL).v:
+            (y.r).p = x
+        y.p = x.p
+
+        if x.p == None:
+
+            (y.lne).suspend_updating()
+            
+            albero.root = y
+            y.p = x.p
+            x.p = y
+            x.lne = always_redraw(lambda: Line(x.get_center(), (x.p).get_center(), buff=RAD))
+            self.add(x.lne, (y.r).lne)
+
+            position_x = x.pos
+            x.pos = (x.r).pos
+
+            self.remove((y.r).lne)
+            x.l = y.r
+            y.r = x
+            (x.l).p = x
+            (x.l).lne = always_redraw(lambda: Line((x.l).get_center(), ((x.l).p).get_center(), buff=RAD))
+            self.add((x.l).lne)
+            x.d = x.d + 1
+            albero.returnTree(x)
+
+            y.pos = position_x
+            y.d = y.d - 1
+            albero.returnTree(y)
+            
+            albero.returnTree(y.l) 
+            #self.updateTree(y.l)
+            
+        else:
+            
+            albero.returnTree(x.p)
+            (y).lne = always_redraw(lambda: Line(y.get_center(), (y.p).get_center(), buff=RAD))
+            (x).lne = always_redraw(lambda: Line(x.get_center(), (y).get_center(), buff=RAD))
+            self.add(y.lne, x.lne)
+            
+            y.pos = x.pos
+            y.d = y.d - 1
+            albero.returnTree(y)
+            #self.updateTree(y.l)
+
+            x.pos = (x.l).pos
+            x.d = x.d + 1
+            (x.r).p = x
+            albero.returnTree(x)            
+            
+            # move y and right subtree
+            if x == ((x.p).r):
+                ((y.p).r) = y # y is left soon
+            else:
+                ((y.p).l) = y # y is right soon
+            
+            self.remove((x.r).lne) #this is a problem!!!
+            
+            (x.r).lne = always_redraw(lambda: Line((x.r).get_center(), (x).get_center(), buff=RAD))
+            self.add((x.r).lne)
+            
+            # move x and subtrees
+            x.p = y     # y is x parent
+            (x).lne = always_redraw(lambda: Line(x.get_center(), (x.p).get_center(), buff=RAD))
+            self.add(x.lne)
+            
+            (x.r).lne = always_redraw(lambda: Line((x.r).get_center(), ((x.r).p).get_center(), buff=RAD))
+            self.add((x.r).lne)
+
+            self.remove((x.l).lne)
+            
+            (y.r).lne = always_redraw(lambda: Line((y.r).get_center(), (x).get_center(), buff=RAD))
+            (y).lne = always_redraw(lambda: Line((y).get_center(), (y.p).get_center(), buff=RAD))
+            self.add((y.r).lne, y.lne)
+            (y.r).pos = (x.l).pos
+
+            ((y.l).lne).suspend_updating()
+            x.l = y.r #subtree B (y.left) becomes x's right soon
+            (y.r).p = x
+
+            y.r = x     # x is left soon of y
+
+            (x.l).lne = always_redraw(lambda: Line((x.l).get_center(), ((x.l).p).get_center(), buff=RAD))
+            self.add((x.l).lne)
+        
+        '''
+        self.wait(3)
+        self.clearScene()
+        root = albero.getRoot()
+        print(root.v)
+        albero.returnTree(root)
+        self.printNodeOneShot(root, albero)
+
+        self.wait(3)
+        '''
+
 
     def insert(self, val, albero):
+        # Ordinary Binary Search Insertion
+        node = Node(val)
+        node.p = None
+        node.v = val
+
+        node.color = 1 # new node must be red
+        node = albero.setColor(node)
+        y = None
+        x = albero.root
+
+        #NodeIns = (node)
+        
+        root = albero.getRoot()
+        
+        # node search
+        while x.v != "Nil":
+            y = x
+            if node.v < x.v:
+                x = x.l
+                '''
+                albero.returnTree(x)
+                if x.l is not None:
+                    self.play(
+                        NodeIns.animate.move_to((y.l).pos),
+                        run_time=RUN_TIME_1,            
+                    )
+                '''  
+            else:
+                x = x.r
+                '''
+                albero.returnTree(x)
+                if x.r is not None:
+                    self.play(
+                        NodeIns.animate.move_to((y.r).pos),
+                        run_time=RUN_TIME_1,            
+                    ) 
+                '''
+        
+        # y is parent of x, x is the node
+        # establish if x is left or right child of y
+        node.p = y
+        if y == None:
+            # new node is a root node
+            albero.root = node
+            (node).l = Node("Nil")
+            ((node).l).color = 0
+            (node).r = Node("Nil")
+            ((node).r).color = 0
+            ((node).l).lne = always_redraw(lambda: Line(node.get_center(), (node.l).get_center(), buff=RAD))
+            ((node).r).lne = always_redraw(lambda: Line(node.get_center(), (node.r).get_center(), buff=RAD))
+            
+            albero.returnTree(node)
+            '''
+            self.play(((node).r).animate.move_to(((node).r).pos),
+                        ((node).l).animate.move_to(((node).l).pos),
+                        run_time=RUN_TIME_1,
+                        )
+            '''
+            #self.add(((node.l).lne), ((node.r).lne))
+            
+            # case 1
+            print("case 1")
+            node.color = 0
+            node = albero.setColor(node)
+            return
+            
+        elif node.v < y.v:
+            # new node is the left child
+            self.remove(y.l)
+            y.l = node
+            (y.l).lne = always_redraw(lambda: Line(node.get_center(), (y).get_center(), buff=RAD))
+            (y.l).l = Node("Nil")
+            ((y.l).l).color = 0
+            (y.l).r = Node("Nil")
+            ((y.l).r).color = 0
+            ((y.l).l).lne = always_redraw(lambda: Line((y.l).get_center(), ((y.l).l).get_center(), buff=RAD))
+            ((y.l).r).lne = always_redraw(lambda: Line((y.l).get_center(), ((y.l).r).get_center(), buff=RAD))
+            albero.returnTree(y)
+            '''
+            self.play((y.l).animate.move_to((y.l).pos),
+                        run_time=RUN_TIME_1,
+                        )
+            '''
+            albero.returnTree(y.l)
+            '''
+            ((y.l).r).move_to((y.l).pos)
+            ((y.l).l).move_to((y.l).pos)
+            self.play(((y.l).r).animate.move_to(((y.l).r).pos),
+                        ((y.l).l).animate.move_to(((y.l).l).pos),
+                        run_time=RUN_TIME_1,
+                        )
+            '''
+            #self.add((((y.l).l).lne), (((y.l).r).lne))
+        else:
+            #new node is the right child
+            self.remove(y.r)
+            y.r = node
+            (y.r).lne = always_redraw(lambda: Line(node.get_center(), (y).get_center(), buff=RAD))
+            (y.r).l = Node("Nil")
+            ((y.r).l).color = 0
+            (y.r).r = Node("Nil")
+            ((y.r).r).color = 0
+            ((y.r).l).lne = always_redraw(lambda: Line((y.r).get_center(), ((y.r).l).get_center(), buff=RAD))
+            ((y.r).r).lne = always_redraw(lambda: Line((y.r).get_center(), ((y.r).r).get_center(), buff=RAD))
+            albero.returnTree(y)
+            '''
+            self.play((y.r).animate.move_to((y.r).pos),
+                        run_time=RUN_TIME_1,
+                        )
+            '''
+            albero.returnTree(y.r)
+            '''
+            ((y.r).r).move_to((y.r).pos)
+            ((y.r).l).move_to((y.r).pos)
+            self.play(((y.r).r).animate.move_to(((y.r).r).pos),
+                        ((y.r).l).animate.move_to(((y.r).l).pos),
+                        run_time=RUN_TIME_1,
+                        )
+            '''
+            #self.add((((y.r).l).lne), (((y.r).r).lne))
+
+        # if the grandparent is None, simply return
+        if (node.p).p == None:
+            return
+        
+        # Fix the tree
+        self.__fix_insert(node, albero)
+
+    def  __fix_insert(self, k, albero):
+        while (k.p).color == 1: # parent is red
+            if k.p == ((k.p).p).r:  # if parent is right child
+                u = ((k.p).p).l # uncle
+                #Case 3: P is red.
+                if u.color == 1:    # uncle is red
+                    # case 3.1: P is red and U is red too.
+                    print("case 3.1 (a)")
+                    u.color = 0
+                    u = albero.setColor(u)
+                    (k.p).color = 0
+                    (k.p) = albero.setColor((k.p))
+                    ((k.p).p).color = 1
+                    ((k.p).p) = albero.setColor(((k.p).p))
+                    k = (k.p).p
+                else:   # uncle is black
+                    #Case 3.2: P is red and U is black (or NULL)
+                    if k == (k.p).l:
+                        # case 3.2.2: P is right child of G and K is left child of P.
+                        print("case 3.2.2")
+                        k = k.p
+                        self.right_rotate(k, albero)
+                    # case 3.2.1: P is right child of G and K is right child of P.
+                    print("case 3.2.1")
+                    k.p.color = 0
+                    (k.p) = albero.setColor((k.p))
+                    ((k.p).p).color = 1
+                    ((k.p).p) = albero.setColor(((k.p).p))
+                    self.left_rotate((k.p).p, albero)
+            else:   # if parent is left child
+                u = ((k.p).p).r # uncle
+                if u.color == 1:
+                    # mirror case 3.1
+                    print("case 3.1 (b)")
+                    u.color = 0
+                    u = albero.setColor(u)
+                    (k.p).color = 0
+                    (k.p) = albero.setColor((k.p))
+                    ((k.p).p).color = 1
+                    ((k.p).p) = albero.setColor(((k.p).p))
+                    k = (k.p).p 
+                else:
+                    if k == (k.p).r:
+                        # mirror case 3.2.2: P is left child of G and K is right child of P.
+                        print("case 3.2.4")
+                        k = k.p
+                        self.left_rotate(k, albero)
+                    # mirror case 3.2.1: P is left child of G and K is left child of P.
+                    print("case 3.2.3")
+                    (k.p).color = 0
+                    (k.p) = albero.setColor((k.p))
+                    if (k.p).p is not None:
+                        ((k.p).p).color = 1
+                        ((k.p).p) = albero.setColor(((k.p).p))
+                    self.right_rotate((k.p).p, albero)
+            if k == albero.root:
+                break
+        (albero.root).color = 0
+        (albero.root) = albero.setColor(albero.root)
+
+    def insert_step(self, val, albero):
         # Ordinary Binary Search Insertion
         node = Node(val)
         node.p = None
@@ -740,9 +1146,9 @@ class firstTreeScenes(Scene):
             return
         
         # Fix the tree
-        self.__fix_insert(node, albero)
+        self.__fix_insert_step(node, albero)
 
-    def  __fix_insert(self, k, albero):
+    def  __fix_insert_step(self, k, albero):
         while (k.p).color == 1: # parent is red
             if k.p == ((k.p).p).r:  # if parent is right child
                 u = ((k.p).p).l # uncle
@@ -1549,6 +1955,8 @@ class RBTree4(firstTreeScenes):
         self.insert(10, bst)
         #self.insert(16, bst)
         #self.insert(18, bst)
+        node2 = bst.getRoot()
+        self.printNodeOneShot(node2, bst)
         self.wait(3)
 
 class deleteTree(firstTreeScenes):
