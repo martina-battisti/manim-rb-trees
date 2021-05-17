@@ -281,45 +281,6 @@ class firstTreeScenes(Scene):
             else:
                 tmp.r = self.deleteNodeProva(val, tmp.r, albero)
             return tmp
-    
-    # rotate left at node x 
-    def left_rotate_visua(self, x, albero):
-        print("left_rotate")
-        y = x.r # y is x's right soon
-        parent = x.p #support for the print function
-        x.r = y.l #subtree B (y.left) becomes x's right soon
-        if (y.l).v != (albero.TNULL).v:
-            (y.l).p = x
-        y.p = x.p   # y becomes soon of x's parent
-        if x.p == None:
-            albero.root = y
-        elif x == (x.p).l:
-            (x.p).l = y # y is left soon
-        else:
-            (x.p).r = y # y is right soon
-        y.l = x     # x is left soon of y
-        x.p = y     # y is x parent
-        self.printNode(parent, albero)
-    
-    # rotate right at node x 
-    def right_rotate_visua(self, x, albero):
-        print("right_rotate")
-        y = x.l
-        parent = x.p
-        x.l = y.r
-        if y.r != albero.TNULL:
-            (y.r).p = x
-        y.p = x.p
-        if x.p == None:
-            albero.root = y
-        elif x == (x.p).r:
-            (x.p).r = y
-        else:
-            (x.p).l = y
-        y.r = x
-        x.p = y
-        self.printNode(parent, albero)
-
 
     # rotate left at node x (visualization)
     def left_rotate_step(self, x, albero):
@@ -385,7 +346,7 @@ class firstTreeScenes(Scene):
                         )
 
             albero.returnTree(y.r)
-            self.updateTree(y.r)
+            self.updateTree(y.r, albero)
 
             
         else:
@@ -402,7 +363,7 @@ class firstTreeScenes(Scene):
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
-            self.updateTree(y.r)
+            self.updateTree(y.r, albero)
 
             x.pos = x.get_center()
             x.d = x.d + 1
@@ -529,7 +490,7 @@ class firstTreeScenes(Scene):
                         )
             
             albero.returnTree(y.l) 
-            self.updateTree(y.l)
+            self.updateTree(y.l, albero)
             
         else:
             
@@ -538,14 +499,14 @@ class firstTreeScenes(Scene):
             (x).lne = always_redraw(lambda: Line(x.get_center(), (y).get_center(), buff=RAD))
             self.add(y.lne, x.lne)
             self.play((y).animate.move_to(x.pos),
-                        (x).animate.move_to((x.l).pos),
-                        (x.l).animate.shift(DR),
+                        (x).animate.move_to((x.r).pos),
+                        (x.r).animate.shift(DR),
                         run_time=RUN_TIME_1,
                         )
             y.pos = y.get_center()
             y.d = y.d - 1
             albero.returnTree(y)
-            self.updateTree(y.l)
+            self.updateTree(y.l, albero)
 
             x.pos = x.get_center()
             x.d = x.d + 1
@@ -704,17 +665,6 @@ class firstTreeScenes(Scene):
 
             (x.r).lne = always_redraw(lambda: Line((x.r).get_center(), ((x.r).p).get_center(), buff=RAD))
             self.add((x.r).lne)
-            
-        '''
-        self.wait(3)
-        self.clearScene()
-        root = albero.getRoot()
-        print(root.v)
-        albero.returnTree(root)
-        self.printNodeOneShot(root, albero)
-
-        self.wait(3)
-        '''
 
     # rotate right at node x
     def right_rotate(self, x, albero):
@@ -812,18 +762,6 @@ class firstTreeScenes(Scene):
 
             (x.l).lne = always_redraw(lambda: Line((x.l).get_center(), ((x.l).p).get_center(), buff=RAD))
             self.add((x.l).lne)
-        
-        '''
-        self.wait(3)
-        self.clearScene()
-        root = albero.getRoot()
-        print(root.v)
-        albero.returnTree(root)
-        self.printNodeOneShot(root, albero)
-
-        self.wait(3)
-        '''
-
 
     def insert(self, val, albero):
         # Ordinary Binary Search Insertion
@@ -836,8 +774,6 @@ class firstTreeScenes(Scene):
         y = None
         x = albero.root
 
-        #NodeIns = (node)
-        
         root = albero.getRoot()
         
         # node search
@@ -845,24 +781,8 @@ class firstTreeScenes(Scene):
             y = x
             if node.v < x.v:
                 x = x.l
-                '''
-                albero.returnTree(x)
-                if x.l is not None:
-                    self.play(
-                        NodeIns.animate.move_to((y.l).pos),
-                        run_time=RUN_TIME_1,            
-                    )
-                '''  
             else:
                 x = x.r
-                '''
-                albero.returnTree(x)
-                if x.r is not None:
-                    self.play(
-                        NodeIns.animate.move_to((y.r).pos),
-                        run_time=RUN_TIME_1,            
-                    ) 
-                '''
         
         # y is parent of x, x is the node
         # establish if x is left or right child of y
@@ -878,13 +798,6 @@ class firstTreeScenes(Scene):
             ((node).r).lne = always_redraw(lambda: Line(node.get_center(), (node.r).get_center(), buff=RAD))
             
             albero.returnTree(node)
-            '''
-            self.play(((node).r).animate.move_to(((node).r).pos),
-                        ((node).l).animate.move_to(((node).l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            '''
-            #self.add(((node.l).lne), ((node.r).lne))
             
             # case 1
             print("case 1")
@@ -904,21 +817,7 @@ class firstTreeScenes(Scene):
             ((y.l).l).lne = always_redraw(lambda: Line((y.l).get_center(), ((y.l).l).get_center(), buff=RAD))
             ((y.l).r).lne = always_redraw(lambda: Line((y.l).get_center(), ((y.l).r).get_center(), buff=RAD))
             albero.returnTree(y)
-            '''
-            self.play((y.l).animate.move_to((y.l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            '''
             albero.returnTree(y.l)
-            '''
-            ((y.l).r).move_to((y.l).pos)
-            ((y.l).l).move_to((y.l).pos)
-            self.play(((y.l).r).animate.move_to(((y.l).r).pos),
-                        ((y.l).l).animate.move_to(((y.l).l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            '''
-            #self.add((((y.l).l).lne), (((y.l).r).lne))
         else:
             #new node is the right child
             self.remove(y.r)
@@ -931,21 +830,7 @@ class firstTreeScenes(Scene):
             ((y.r).l).lne = always_redraw(lambda: Line((y.r).get_center(), ((y.r).l).get_center(), buff=RAD))
             ((y.r).r).lne = always_redraw(lambda: Line((y.r).get_center(), ((y.r).r).get_center(), buff=RAD))
             albero.returnTree(y)
-            '''
-            self.play((y.r).animate.move_to((y.r).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            '''
             albero.returnTree(y.r)
-            '''
-            ((y.r).r).move_to((y.r).pos)
-            ((y.r).l).move_to((y.r).pos)
-            self.play(((y.r).r).animate.move_to(((y.r).r).pos),
-                        ((y.r).l).animate.move_to(((y.r).l).pos),
-                        run_time=RUN_TIME_1,
-                        )
-            '''
-            #self.add((((y.r).l).lne), (((y.r).r).lne))
 
         # if the grandparent is None, simply return
         if (node.p).p == None:
@@ -1567,7 +1452,7 @@ class firstTreeScenes(Scene):
             (z.r).pos = (z.r).get_center()
             (z.r).d = (z.r).d - 1
             albero.returnTree(z.r)
-            self.updateTree(z.r)
+            self.updateTree(z.r, albero)
 
             x = z.r
             self.__rb_transplant(z, z.r, albero)
@@ -1591,7 +1476,7 @@ class firstTreeScenes(Scene):
             (z.l).pos = (z.l).get_center()
             (z.l).d = (z.l).d - 1
             albero.returnTree(z.l)
-            self.updateTree(z.l)
+            self.updateTree(z.l, albero)
 
             x = z.l
             self.__rb_transplant(z, z.left, albero)
@@ -1623,7 +1508,7 @@ class firstTreeScenes(Scene):
                 ((y.l).lne).suspend_updating()
                 self.play(FadeOut(y.l), FadeOut((y.l).lne))
                 albero.returnTree(y)
-                self.updateTree(y.r)
+                self.updateTree(y.r, albero)
                 x.p = y
                 #(z.l).p = y
                 #y.l = z.l
@@ -1676,12 +1561,13 @@ class firstTreeScenes(Scene):
         #self.__delete_node_helper(self.root, data, albero)
 
     # move nodes to the new position in a recursive way
-    def updateTree(self, node):
+    def updateTree(self, node, albero):
         self.play((node).animate.move_to(node.pos))
+        albero.returnTree(node)
         if node.l is not None:
-            self.updateTree(node.l)
+            self.updateTree(node.l, albero)
         if node.r is not None:
-            self.updateTree(node.r)
+            self.updateTree(node.r, albero)
             
 
     # RULES
@@ -1957,6 +1843,8 @@ class RBTree4(firstTreeScenes):
         #self.insert(18, bst)
         node2 = bst.getRoot()
         self.printNodeOneShot(node2, bst)
+        self.insert_step(3, bst)
+        self.insert_step(5, bst)
         self.wait(3)
 
 class deleteTree(firstTreeScenes):
